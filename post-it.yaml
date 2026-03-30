@@ -1,0 +1,5 @@
+project: sfm-workflows
+plugin: snf-instance-rest
+source: ../cutip-projects/pre-cutip/sfmpost/rbac_access_matrix.json
+endpoints: sfm_endpoints.py
+base_url: https://100.94.115.90
