@@ -31,13 +31,13 @@ generate typed Python modules, and orchestrate multi-step REST workflows.
 ## Installation
 
 ```bash
-pip install restful-{X.Y.Z}-py3-none-any.whl
+pip install restful_sdk-{X.Y.Z}-py3-none-any.whl
 ```
 
 Or install directly from this release:
 
 ```bash
-pip install https://github.com/joshuajerome/restful/releases/download/v{X.Y.Z}/restful-{X.Y.Z}-py3-none-any.whl
+pip install https://github.com/joshuajerome/restful/releases/download/v{X.Y.Z}/restful_sdk-{X.Y.Z}-py3-none-any.whl
 ```
 
 **Full Changelog**: https://github.com/joshuajerome/restful/compare/v{A.B.C}...v{X.Y.Z}

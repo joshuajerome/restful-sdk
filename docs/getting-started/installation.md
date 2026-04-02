@@ -1,24 +1,24 @@
 # Installation
 
-## From GitHub Releases (recommended)
-
-Download the latest wheel from [GitHub Releases](https://github.com/joshuajerome/restful/releases):
+## From PyPI (recommended)
 
 ```bash
-pip install restful-0.1.0-py3-none-any.whl
+pip install restful-sdk
 ```
 
-Or install directly from the release URL:
+## From GitHub Releases
+
+Download the latest wheel from [GitHub Releases](https://github.com/joshuajerome/restful-sdk/releases):
 
 ```bash
-pip install https://github.com/joshuajerome/restful/releases/download/v0.1.0/restful-0.1.0-py3-none-any.whl
+pip install restful_sdk-0.0.1-py3-none-any.whl
 ```
 
 ## From Source (development)
 
 ```bash
-git clone https://github.com/joshuajerome/restful.git
-cd restful
+git clone https://github.com/joshuajerome/restful-sdk.git
+cd restful-sdk
 uv sync
 ```
 

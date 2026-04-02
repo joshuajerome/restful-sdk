@@ -163,7 +163,7 @@ git branch -d release/v{X.Y.Z} 2>/dev/null || true
 ✓ staging → integration forwarded
 ✓ release/v{X.Y.Z} pushed — release.yml passed
 ✓ GitHub Release: https://github.com/joshuajerome/restful/releases/tag/v{X.Y.Z}
-✓ Assets: restful-{X.Y.Z}-py3-none-any.whl (only)
+✓ Assets: restful_sdk-{X.Y.Z}-py3-none-any.whl (only)
 ```
 
 ---
