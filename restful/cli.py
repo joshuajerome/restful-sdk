@@ -179,11 +179,11 @@ def cmd_workflow_list(args: argparse.Namespace) -> None:
     ws = _load_ws()
     wf_dir = ws.root / "workflows"
     if not wf_dir.exists():
-        print("No workflows/ directory found.")
+        print("No notebooks/ directory found.")
         return
     workflows = sorted(wf_dir.glob("*.py"))
     if not workflows:
-        print("No workflow files found.")
+        print("No notebook files found.")
         return
     for wf in workflows:
         if wf.name.startswith("_"):
@@ -200,7 +200,7 @@ def cmd_workflow_run(args: argparse.Namespace) -> None:
         # Try exact path
         wf_path = Path(args.workflow_name)
         if not wf_path.exists():
-            print(f"Error: Workflow not found: {args.workflow_name}")
+            print(f"Error: Notebook not found: {args.workflow_name}")
             sys.exit(1)
 
     # Add workspace root to sys.path for imports
@@ -344,13 +344,13 @@ def main() -> None:
     pl_load.add_argument("-n", "--name", help="Load specific API by name")
 
     # --- workflow ---
-    wf_parser = sub.add_parser("workflow", help="Workflow management")
+    wf_parser = sub.add_parser("workflow", help="Notebook management")
     wf_sub = wf_parser.add_subparsers(dest="wf_action")
 
-    wf_sub.add_parser("list", help="List workflows in workspace")
+    wf_sub.add_parser("list", help="List notebooks in workspace")
 
-    wf_run = wf_sub.add_parser("run", help="Run a workflow")
-    wf_run.add_argument("workflow_name", help="Workflow file name (without .py)")
+    wf_run = wf_sub.add_parser("run", help="Run a notebook")
+    wf_run.add_argument("workflow_name", help="Notebook file name (without .py)")
     wf_run.add_argument("--stage", help="Run a single stage by name")
     wf_run.add_argument("--list", dest="list_stages", action="store_true", help="List stages")
 

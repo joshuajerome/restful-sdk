@@ -30,8 +30,16 @@ def test_plugins_command():
 
 
 @needs_external
-def test_validate_command():
-    r = _run(["validate"])
+def test_validate_command(tmp_path):
+    config = tmp_path / "restful.yaml"
+    config.write_text(
+        f"project: test\n"
+        f"plugin: snf-instance-rest\n"
+        f"plugin_path: {PLUGIN_DIR.resolve()}\n"
+        f"source: {RBAC_PATH.resolve()}\n"
+        f"endpoints: {tmp_path / 'endpoints.py'}\n"
+    )
+    r = _run(["validate", "-c", str(config)])
     assert r.returncode == 0
     assert "Valid" in r.stdout
     assert "219" in r.stdout
