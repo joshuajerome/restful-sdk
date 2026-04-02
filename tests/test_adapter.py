@@ -4,9 +4,7 @@ import pytest
 
 from restful.plugins import registry
 
-PLUGIN_DIR = (
-    Path(__file__).resolve().parents[1] / ".." / "sfm-util" / "plugins" / "snf-instance-rest"
-)
+PLUGIN_DIR = Path(__file__).resolve().parents[1] / ".." / "sfm-util" / "plugins" / "snf-instance-rest"
 
 RBAC_PATH = (
     Path(__file__).resolve().parents[1] / ".." / "cutip-projects" / "pre-cutip" / "sfmpost" / "rbac_access_matrix.json"

@@ -55,7 +55,6 @@ def _build_client(api: ApiConnection) -> Client:
         # API key auth is handled by adding a header — use a simple lambda-based strategy
         key = os.environ.get(api.auth.key_env, "") if api.auth.key_env else ""
         if key:
-            from restful.auth.base import AuthStrategy
 
             class ApiKeyAuth:
                 def auth_headers(self):

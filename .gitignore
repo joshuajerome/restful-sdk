@@ -8,3 +8,4 @@ dist/
 build/
 uv.lock
 restful.yaml
+sfm_endpoints.py

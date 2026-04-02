@@ -10,7 +10,6 @@ import yaml
 
 from restful.plugins.base import Adapter
 
-
 _registry: dict[str, Any] = {}
 
 
@@ -36,9 +35,7 @@ def load_plugin(plugin_dir: Path) -> Any:
             manifest = yaml.safe_load(f) or {}
 
     # Load adapter module
-    spec = importlib.util.spec_from_file_location(
-        f"_plugin_{plugin_dir.name}", adapter_path
-    )
+    spec = importlib.util.spec_from_file_location(f"_plugin_{plugin_dir.name}", adapter_path)
     if spec is None or spec.loader is None:
         raise ImportError(f"Cannot load adapter from {adapter_path}")
 
