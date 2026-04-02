@@ -2,10 +2,10 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from post_it.client import Client
-from post_it.http.errors import HttpError
-from post_it.http.models import HttpResponse
-from post_it.models import Endpoint
+from restful.client import Client
+from restful.http.errors import HttpError
+from restful.http.models import HttpResponse
+from restful.models import Endpoint
 
 
 def _mock_auth():

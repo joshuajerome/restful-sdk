@@ -3,11 +3,12 @@ import sys
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
+PLUGIN_DIR = PROJECT_DIR / ".." / "sfm-util" / "plugins" / "snf-instance-rest"
 
 
 def _run(args: list[str], cwd: Path = PROJECT_DIR) -> subprocess.CompletedProcess:
     return subprocess.run(
-        [sys.executable, "-m", "post_it"] + args,
+        [sys.executable, "-m", "restful"] + args,
         cwd=cwd,
         capture_output=True,
         text=True,
@@ -17,7 +18,8 @@ def _run(args: list[str], cwd: Path = PROJECT_DIR) -> subprocess.CompletedProces
 def test_plugins_command():
     r = _run(["plugins"])
     assert r.returncode == 0
-    assert "snf-instance-rest" in r.stdout
+    # No built-in plugins — should say "No plugins registered"
+    assert "no plugins" in r.stdout.lower() or r.stdout.strip() == ""
 
 
 def test_validate_command():
@@ -28,11 +30,16 @@ def test_validate_command():
 
 
 def test_generate_command(tmp_path):
-    # Create a temp post-it.yaml pointing to rbac JSON
     rbac = PROJECT_DIR / ".." / "cutip-projects" / "pre-cutip" / "sfmpost" / "rbac_access_matrix.json"
-    config = tmp_path / "post-it.yaml"
+    config = tmp_path / "restful.yaml"
     output = tmp_path / "endpoints.py"
-    config.write_text(f"project: test\nplugin: snf-instance-rest\nsource: {rbac.resolve()}\nendpoints: {output}\n")
+    config.write_text(
+        f"project: test\n"
+        f"plugin: snf-instance-rest\n"
+        f"plugin_path: {PLUGIN_DIR.resolve()}\n"
+        f"source: {rbac.resolve()}\n"
+        f"endpoints: {output}\n"
+    )
 
     r = _run(["generate", "-c", str(config)])
     assert r.returncode == 0

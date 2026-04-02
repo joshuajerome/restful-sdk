@@ -1,0 +1,97 @@
+site_name: restful
+site_description: >
+  REST workflow automation framework — ingest API endpoint definitions,
+  generate typed Python modules, and orchestrate multi-step REST workflows.
+site_url: https://joshuajerome.github.io/restful
+repo_url: https://github.com/joshuajerome/restful
+repo_name: joshuajerome/restful
+edit_uri: edit/integration/docs/
+
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+
+plugins:
+  - search
+  - callouts
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      base_path: ["."]
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - tables
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - toc:
+      permalink: true
+      title: On this page
+
+# ── Navigation ──────────────────────────────────────────────────────────────
+nav:
+  - Home: index.md
+
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quickstart: getting-started/quickstart.md
+    - Workspace Layout: getting-started/workspace-layout.md
+
+  - Concepts:
+    - Overview: concepts/overview.md
+    - Workspaces: concepts/workspaces.md
+    - Plugins & Endpoints: concepts/plugins-endpoints.md
+    - Workflows: concepts/workflows.md
+    - Authentication: concepts/authentication.md
+    - Variables: concepts/variables.md
+
+  - Reference:
+    - CLI: reference/cli.md
+    - Client API: reference/client-api.md
+    - Endpoint Model: reference/endpoint-model.md
+    - Plugin Adapter: reference/plugin-adapter.md
+    - Workflow Decorators: reference/workflow-decorators.md
+
+  - Guides:
+    - Writing a Plugin: guides/writing-a-plugin.md
+    - Writing Workflows: guides/writing-workflows.md
+    - Token Caching: guides/token-caching.md
+
+  - Architecture:
+    - Design Decisions: architecture/design-decisions.md
+
+  - Development:
+    - Branching Guide: development/branching.md
+    - CI/CD Workflows: development/workflows.md
+    - Capabilities: capabilities.md
+    - Patch Notes: patch-notes.md

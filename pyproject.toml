@@ -3,9 +3,9 @@ requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "post-it"
+name = "restful"
 version = "0.1.0"
-description = "Ingest API endpoint definitions, generate typed Python modules, make REST calls"
+description = "REST workflow automation — ingest API endpoint definitions, generate typed Python modules, orchestrate multi-step REST workflows"
 requires-python = ">=3.10"
 dependencies = [
     "requests>=2.32.0",
@@ -17,12 +17,17 @@ dependencies = [
 dev = [
     "pytest>=8.0.0",
 ]
+docs = [
+    "mkdocs-material>=9.5",
+    "mkdocs<2.0",
+    "mkdocs-callouts>=1.14",
+]
 
 [tool.setuptools]
 package-dir = { "" = "." }
 
 [tool.setuptools.packages.find]
-include = ["post_it*"]
+include = ["restful*"]
 
 [dependency-groups]
 dev = [

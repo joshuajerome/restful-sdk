@@ -1,5 +1,5 @@
-from post_it.generator.python_module import generate
-from post_it.models import EndpointSpec
+from restful.generator.python_module import generate
+from restful.models import EndpointSpec
 
 
 def test_generate_produces_valid_source():
@@ -10,7 +10,7 @@ def test_generate_produces_valid_source():
     source = generate(specs, plugin_name="test")
     assert 'Users = Endpoint(path="/api/v1/users"' in source
     assert 'Items = Endpoint(path="/api/v1/items"' in source
-    assert "from post_it.models import Endpoint" in source
+    assert "from restful.models import Endpoint" in source
 
 
 def test_generate_includes_all_methods():

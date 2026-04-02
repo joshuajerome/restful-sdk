@@ -1,6 +1,6 @@
 import time
 
-from post_it.auth.cache import TokenCache
+from restful.auth.cache import TokenCache
 
 
 def test_save_and_load(tmp_path):
