@@ -105,7 +105,8 @@ class BearerAuth:
                 if token:
                     break
         if not token:
-            raise RuntimeError(f"Login response missing token. Tried '{self.token_key}' + fallbacks. Keys: {list(data.keys())}")
+            keys = list(data.keys())
+            raise RuntimeError(f"Login response missing token (tried '{self.token_key}' + fallbacks). Keys: {keys}")
 
         exp = _jwt_exp_epoch(token)
         if not exp and "expires_in" in data:
