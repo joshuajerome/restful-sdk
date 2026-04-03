@@ -64,7 +64,7 @@ def create_workspace(name: str, parent: Path | None = None) -> Path:
     # Directories
     (root / "apis").mkdir()
     (root / "apis" / "__init__.py").write_text("", encoding="utf-8")
-    (root / "workflows").mkdir()
+    (root / "notebooks").mkdir()
     (root / ".restful").mkdir()
 
     # Gitignore

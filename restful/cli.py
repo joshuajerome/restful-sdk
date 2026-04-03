@@ -77,6 +77,68 @@ def cmd_workspace_info(args: argparse.Namespace) -> None:
         print(f"  - {api.name} (alias: {api.alias}, plugin: {api.plugin})")
 
 
+def cmd_workspace_export(args: argparse.Namespace) -> None:
+    """Export workspace as a ZIP file."""
+    import zipfile
+
+    ws = _load_ws()
+    name = ws.name
+    output = Path(args.output) if args.output else Path(f"{name}.zip")
+
+    exclude = {"cache.json", "__pycache__"}
+    count = 0
+
+    with zipfile.ZipFile(output, "w", zipfile.ZIP_DEFLATED) as zf:
+        for file in sorted(ws.root.rglob("*")):
+            if file.is_dir():
+                continue
+            rel = file.relative_to(ws.root)
+            parts = set(rel.parts)
+            if parts & exclude or file.suffix == ".pyc":
+                continue
+            zf.write(file, arcname=str(rel))
+            count += 1
+
+    print(f"Exported {name} → {output} ({count} files)")
+
+
+def cmd_workspace_import(args: argparse.Namespace) -> None:
+    """Import workspace from a ZIP file."""
+    import zipfile
+
+    zip_path = Path(args.zip_path)
+    if not zip_path.exists():
+        print(f"Error: File not found: {zip_path}")
+        sys.exit(1)
+
+    target = Path(args.target) if args.target else Path.cwd()
+
+    with zipfile.ZipFile(zip_path, "r") as zf:
+        names = zf.namelist()
+        configs = [n for n in names if n.endswith(".config.yaml")]
+        if not configs:
+            print("Error: ZIP does not contain a *.config.yaml — not a valid workspace")
+            sys.exit(1)
+
+        # Warn about Python files
+        py_files = [n for n in names if n.endswith(".py")]
+        if py_files:
+            print(f"Warning: This workspace contains {len(py_files)} Python files that will execute when run.")
+            print("Only import workspaces from trusted sources.")
+
+        # Extract — use the config name to determine workspace name
+        ws_name = configs[0].replace(".config.yaml", "")
+        extract_dir = target / ws_name
+        if extract_dir.exists():
+            print(f"Error: Directory already exists: {extract_dir}")
+            sys.exit(1)
+
+        extract_dir.mkdir(parents=True)
+        zf.extractall(extract_dir)
+
+    print(f"Imported → {extract_dir}")
+
+
 def cmd_workspace_vars(args: argparse.Namespace) -> None:
     ws = _load_ws()
     vs = VariableStore(ws.root)
@@ -177,7 +239,7 @@ def cmd_plugin_load(args: argparse.Namespace) -> None:
 
 def cmd_workflow_list(args: argparse.Namespace) -> None:
     ws = _load_ws()
-    wf_dir = ws.root / "workflows"
+    wf_dir = ws.root / "notebooks"
     if not wf_dir.exists():
         print("No notebooks/ directory found.")
         return
@@ -195,7 +257,7 @@ def cmd_workflow_run(args: argparse.Namespace) -> None:
     ws = _load_ws()
 
     # Find workflow file
-    wf_path = ws.root / "workflows" / f"{args.workflow_name}.py"
+    wf_path = ws.root / "notebooks" / f"{args.workflow_name}.py"
     if not wf_path.exists():
         # Try exact path
         wf_path = Path(args.workflow_name)
@@ -323,6 +385,13 @@ def main() -> None:
 
     ws_sub.add_parser("info", help="Show workspace info")
 
+    ws_export = ws_sub.add_parser("export", help="Export workspace as ZIP")
+    ws_export.add_argument("-o", "--output", help="Output file path")
+
+    ws_import = ws_sub.add_parser("import", help="Import workspace from ZIP")
+    ws_import.add_argument("zip_path", help="Path to ZIP file")
+    ws_import.add_argument("-d", "--target", help="Target directory (default: cwd)")
+
     ws_vars = ws_sub.add_parser("vars", help="Manage workspace variables")
     ws_vars_sub = ws_vars.add_subparsers(dest="vars_action")
     ws_vars_set = ws_vars_sub.add_parser("set", help="Set a variable")
@@ -366,7 +435,13 @@ def main() -> None:
 
     # Dispatch
     if args.command == "workspace":
-        actions = {"create": cmd_workspace_create, "info": cmd_workspace_info, "vars": cmd_workspace_vars}
+        actions = {
+            "create": cmd_workspace_create,
+            "info": cmd_workspace_info,
+            "export": cmd_workspace_export,
+            "import": cmd_workspace_import,
+            "vars": cmd_workspace_vars,
+        }
         handler = actions.get(args.ws_action)
         if handler:
             handler(args)

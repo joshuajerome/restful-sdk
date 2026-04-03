@@ -105,7 +105,7 @@ def test_scaffold_creates_structure(tmp_path):
     assert (root / "myws.config.yaml").exists()
     assert (root / "__main__.py").exists()
     assert (root / "apis" / "__init__.py").exists()
-    assert (root / "workflows").is_dir()
+    assert (root / "notebooks").is_dir()
     assert (root / ".restful").is_dir()
     assert (root / ".gitignore").exists()
 
