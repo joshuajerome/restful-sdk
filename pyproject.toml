@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "restful-sdk"
-version = "0.0.1"
+version = "0.0.2"
 description = "REST workflow automation — ingest API endpoint definitions, generate typed Python modules, orchestrate multi-step REST workflows"
 requires-python = ">=3.10"
 dependencies = [
