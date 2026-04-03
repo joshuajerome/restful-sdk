@@ -97,9 +97,15 @@ class BearerAuth:
 
     def _refresh(self) -> None:
         data = self._login()
+        # Try configured key first, then common fallbacks
         token = data.get(self.token_key)
         if not token:
-            raise RuntimeError(f"Login response missing '{self.token_key}': {list(data.keys())}")
+            for fallback in ("access_token", "token", "jwt", "id_token"):
+                token = data.get(fallback)
+                if token:
+                    break
+        if not token:
+            raise RuntimeError(f"Login response missing token. Tried '{self.token_key}' + fallbacks. Keys: {list(data.keys())}")
 
         exp = _jwt_exp_epoch(token)
         if not exp and "expires_in" in data:
