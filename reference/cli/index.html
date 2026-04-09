@@ -1086,6 +1086,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="workflow run">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        --resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1810,6 +1827,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="workflow run">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        --resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
       </ul>
@@ -1849,7 +1883,7 @@
 <p>Create a new workspace directory with scaffold files.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>-m<span class="w"> </span>restful<span class="w"> </span>workspace<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>my-project
 </span></code></pre></div>
-<p>Creates: config template, <code>__main__.py</code>, <code>apis/</code>, <code>workflows/</code>, <code>.restful/</code>, <code>.gitignore</code>.</p>
+<p>Creates: config template, <code>__main__.py</code>, <code>apis/</code>, <code>notebooks/</code>, <code>.restful/</code>, <code>.gitignore</code>.</p>
 <h3 id="workspace-info"><code>workspace info</code><a class="headerlink" href="#workspace-info" title="Permanent link">&para;</a></h3>
 <p>Display current workspace configuration and API connections.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>-m<span class="w"> </span>restful<span class="w"> </span>workspace<span class="w"> </span>info
@@ -1884,7 +1918,7 @@
 <p>Output: <code>apis/&lt;sanitized_name&gt;/endpoints.py</code></p>
 <h2 id="workflow-commands">Workflow Commands<a class="headerlink" href="#workflow-commands" title="Permanent link">&para;</a></h2>
 <h3 id="workflow-list"><code>workflow list</code><a class="headerlink" href="#workflow-list" title="Permanent link">&para;</a></h3>
-<p>List all workflow files in the <code>workflows/</code> directory.</p>
+<p>List all workflow files in the <code>notebooks/</code> directory.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>python<span class="w"> </span>-m<span class="w"> </span>restful<span class="w"> </span>workflow<span class="w"> </span>list
 </span></code></pre></div>
 <h3 id="workflow-run"><code>workflow run</code><a class="headerlink" href="#workflow-run" title="Permanent link">&para;</a></h3>
@@ -1892,7 +1926,10 @@
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>python<span class="w"> </span>-m<span class="w"> </span>restful<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>my_flow<span class="w">                    </span><span class="c1"># all stages</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>python<span class="w"> </span>-m<span class="w"> </span>restful<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>my_flow<span class="w"> </span>--stage<span class="w"> </span><span class="s2">&quot;Fetch&quot;</span><span class="w">    </span><span class="c1"># single stage</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>python<span class="w"> </span>-m<span class="w"> </span>restful<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>my_flow<span class="w"> </span>--list<span class="w">             </span><span class="c1"># list stages only</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>python<span class="w"> </span>-m<span class="w"> </span>restful<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>my_flow<span class="w"> </span>--resume<span class="w">           </span><span class="c1"># resume from last failed stage</span>
 </span></code></pre></div>
+<h4 id="-resume"><code>--resume</code><a class="headerlink" href="#-resume" title="Permanent link">&para;</a></h4>
+<p>Resume a workflow from the last failed or incomplete stage. The runner reads <code>.restful/variables.json</code> to determine which stages completed, then skips them and starts execution from the next stage.</p>
 
 
 
