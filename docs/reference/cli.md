@@ -12,7 +12,7 @@ Create a new workspace directory with scaffold files.
 python -m restful workspace create -n my-project
 ```
 
-Creates: config template, `__main__.py`, `apis/`, `workflows/`, `.restful/`, `.gitignore`.
+Creates: config template, `__main__.py`, `apis/`, `notebooks/`, `.restful/`, `.gitignore`.
 
 ### `workspace info`
 
@@ -80,7 +80,7 @@ Output: `apis/<sanitized_name>/endpoints.py`
 
 ### `workflow list`
 
-List all workflow files in the `workflows/` directory.
+List all workflow files in the `notebooks/` directory.
 
 ```bash
 python -m restful workflow list
@@ -94,4 +94,9 @@ Run a workflow or individual stage.
 python -m restful workflow run my_flow                    # all stages
 python -m restful workflow run my_flow --stage "Fetch"    # single stage
 python -m restful workflow run my_flow --list             # list stages only
+python -m restful workflow run my_flow --resume           # resume from last failed stage
 ```
+
+#### `--resume`
+
+Resume a workflow from the last failed or incomplete stage. The runner reads `.restful/variables.json` to determine which stages completed, then skips them and starts execution from the next stage.

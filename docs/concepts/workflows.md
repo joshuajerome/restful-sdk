@@ -1,6 +1,6 @@
 # Workflows
 
-Workflows are Python scripts that chain REST calls into sequential stages with shared context.
+Workflows are Python scripts that chain REST calls into sequential stages with shared context. Workflow files live in the `notebooks/` directory of a workspace.
 
 ## Stage Decorator
 
@@ -57,4 +57,4 @@ Results include: success/failure, duration, captured variables, error message (o
 
 ## Execution
 
-Stages run sequentially in decorator order. If a stage fails, execution stops. Variables are persisted to `.restful/variables.json` after the run completes.
+Stages run sequentially in decorator order. If a stage fails, execution stops. Variables are persisted to `.restful/variables.json` after the run completes. Workflow files are discovered from the `notebooks/` directory.

@@ -16,7 +16,7 @@ my-project/
 ├── my-project.config.yaml
 ├── __main__.py
 ├── apis/
-├── workflows/
+├── notebooks/
 └── .restful/
 ```
 
@@ -76,7 +76,7 @@ print(response.json())
 
 ## 5. Write a Workflow
 
-Create `workflows/my_flow.py`:
+Create `notebooks/my_flow.py`:
 
 ```python
 from restful import stage, WorkflowContext
