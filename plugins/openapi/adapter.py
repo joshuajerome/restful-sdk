@@ -107,9 +107,11 @@ def parse(source: Path) -> list[EndpointSpec]:
                     # Collect parameters
                     params = op.get("parameters", [])
                     if params:
-                        metadata.setdefault("parameters", []).extend(
-                            [{"name": p.get("name"), "in": p.get("in"), "required": p.get("required", False)} for p in params if isinstance(p, dict)]
-                        )
+                        for p in params:
+                            if isinstance(p, dict):
+                                metadata.setdefault("parameters", []).append(
+                                    {"name": p.get("name"), "in": p.get("in"), "required": p.get("required", False)}
+                                )
 
         if not methods:
             continue
