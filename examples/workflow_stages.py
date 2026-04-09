@@ -63,7 +63,7 @@ def fetch_comments(ctx: WorkflowContext):
 @stage("Summary")
 def summary(ctx: WorkflowContext):
     """Print a summary of what we found."""
-    print(f"\n  === Summary ===")
+    print("\n  === Summary ===")
     print(f"  User: {ctx.get('user_name')} (ID: {ctx.get('user_id')})")
     print(f"  Post: {ctx.get('post_title')}")
     print(f"  Comments: {ctx.get('comment_count')}")
@@ -72,11 +72,12 @@ def summary(ctx: WorkflowContext):
 # ── Run ──────────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
+    import tempfile
+    from pathlib import Path
+
     from restful.workflow.context import ClientNamespace
     from restful.workflow.runner import WorkflowRunner
     from restful.workspace.variables import VariableStore
-    from pathlib import Path
-    import tempfile
 
     # Build context manually (normally from_workspace does this)
     ns = ClientNamespace()

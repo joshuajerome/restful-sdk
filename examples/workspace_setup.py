@@ -7,8 +7,8 @@ Most users will do this via the CLI or the desktop app instead.
 
 from pathlib import Path
 
-from restful.workspace.scaffold import create_workspace
 from restful.workspace.config import WorkspaceConfig
+from restful.workspace.scaffold import create_workspace
 from restful.workspace.variables import VariableStore
 
 # ── Create a workspace ───────────────────────────────────────────────────
@@ -23,7 +23,7 @@ else:
 
 # ── Examine the structure ────────────────────────────────────────────────
 
-print(f"\nWorkspace structure:")
+print("\nWorkspace structure:")
 for p in sorted(root.rglob("*")):
     if "__pycache__" in str(p):
         continue
@@ -45,7 +45,7 @@ vs.set("environment", "development")
 vs.set("api_version", "v1")
 vs.save()
 
-print(f"\nVariables:")
+print("\nVariables:")
 for k, v in vs.all().items():
     print(f"  {k} = {v}")
 

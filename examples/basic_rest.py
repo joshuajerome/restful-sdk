@@ -4,7 +4,7 @@ Basic REST client usage — no workspace, no workflows.
 Shows how to use the Client directly for quick API calls.
 """
 
-from restful import Client, BearerAuth
+from restful import Client
 from restful.models import Endpoint
 
 # ── Define endpoints as typed constants ──────────────────────────────────
