@@ -7,11 +7,32 @@ name = "restful-sdk"
 version = "0.1.0"
 description = "REST workflow automation — ingest API endpoint definitions, generate typed Python modules, orchestrate multi-step REST workflows"
 requires-python = ">=3.10"
+license = {text = "MIT"}
+keywords = ["rest", "api", "workflow", "sdk", "automation", "endpoints", "typed", "orchestration"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Internet :: WWW/HTTP",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 dependencies = [
     "requests>=2.32.0",
     "urllib3>=2.0.0",
     "pyyaml>=6.0.1",
 ]
+
+[project.urls]
+Homepage = "https://github.com/joshuajerome/restful-sdk"
+Documentation = "https://joshuajerome.github.io/restful-sdk"
+Repository = "https://github.com/joshuajerome/restful-sdk"
+Issues = "https://github.com/joshuajerome/restful-sdk/issues"
+Changelog = "https://github.com/joshuajerome/restful-sdk/releases"
 
 [project.optional-dependencies]
 dev = [
