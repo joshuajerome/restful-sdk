@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import logging
+import random
+import time
 from typing import Any
 
 from restful.auth.base import AuthStrategy
@@ -16,7 +18,7 @@ Expected = int | set[int]
 
 class Client:
     """
-    REST client with typed endpoints, auth injection, and 401 retry.
+    REST client with typed endpoints, auth injection, retry, and 401 re-auth.
 
     Usage:
         from restful import Client, BearerAuth
@@ -28,6 +30,8 @@ class Client:
                 login_path="/security/v1/auth/login",
                 payload={"username": "admin", "password": "secret"},
             ),
+            retries=3,
+            retry_on={500, 502, 503, 504},
         )
 
         resp = client.get(ep.BlueprintTemplates)
@@ -39,9 +43,15 @@ class Client:
         auth: AuthStrategy | None = None,
         verify_tls: bool = False,
         timeout_s: int = 15,
+        retries: int = 0,
+        retry_on: set[int] | None = None,
+        retry_delay: float = 1.0,
     ):
         self.base_url = base_url
         self.auth = auth
+        self.retries = retries
+        self.retry_on = retry_on or {500, 502, 503, 504}
+        self.retry_delay = retry_delay
         self.http = HttpClient(
             base_url=base_url,
             verify_tls=verify_tls,
@@ -74,7 +84,7 @@ class Client:
         payload: Any = None,
         expected_status: Expected = 200,
     ) -> HttpResponse:
-        """Execute a request with 401 retry."""
+        """Execute a request with retry (exponential backoff) and 401 re-auth."""
         path = self._resolve_path(endpoint, params)
         self._apply_auth()
 
@@ -87,15 +97,44 @@ class Client:
                 expected_status=expected_status,
             )
 
-        try:
-            return _do()
-        except HttpError as e:
-            if e.status_code == 401 and self.auth:
-                logger.warning("401 received; re-authenticating and retrying")
-                self.auth.invalidate()
-                self._apply_auth()
+        last_error: HttpError | None = None
+        attempts = 1 + self.retries  # 1 initial + N retries
+
+        for attempt in range(attempts):
+            try:
                 return _do()
-            raise
+            except HttpError as e:
+                last_error = e
+
+                # 401 → re-authenticate and retry once (separate from general retry)
+                if e.status_code == 401 and self.auth:
+                    logger.warning("401 received; re-authenticating and retrying")
+                    self.auth.invalidate()
+                    self._apply_auth()
+                    try:
+                        return _do()
+                    except HttpError:
+                        raise
+
+                # General retry for configured status codes
+                if e.status_code in self.retry_on and attempt < attempts - 1:
+                    delay = self.retry_delay * (2**attempt) + random.uniform(0, 0.5)
+                    logger.warning(
+                        "Retry %d/%d after %s %d (waiting %.1fs)",
+                        attempt + 1,
+                        self.retries,
+                        method,
+                        e.status_code,
+                        delay,
+                    )
+                    time.sleep(delay)
+                    continue
+
+                raise
+
+        if last_error:
+            raise last_error
+        raise RuntimeError("Unexpected: no response and no error")
 
     def get(
         self,

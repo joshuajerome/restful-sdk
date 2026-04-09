@@ -1,10 +1,11 @@
-"""Execute workflows — full run or individual stages."""
+"""Execute workflows — full run, individual stages, and resume."""
 
 from __future__ import annotations
 
+import json
 import logging
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
@@ -13,6 +14,8 @@ from restful.workflow.decorator import StageInfo
 from restful.workflow.loader import load_workflow
 
 logger = logging.getLogger(__name__)
+
+LAST_RUN_FILE = ".restful/last_run.json"
 
 
 @dataclass
@@ -46,9 +49,50 @@ class WorkflowRunner:
                 logger.error("Stage '%s' failed: %s", stage_info.name, result.error)
                 break
 
-        # Persist variables after run
+        # Persist variables and last run
         if self.ctx._variables is not None:
             self.ctx._variables.save()
+        self._save_last_run(workflow_path, results)
+
+        return results
+
+    def resume(self, workflow_path: Path, from_stage: str | None = None) -> list[StageResult]:
+        """Resume a workflow from a specific stage, skipping completed ones.
+
+        If from_stage is None, resumes from the first failed stage in last_run.json.
+        """
+        stages = load_workflow(workflow_path)
+        if not stages:
+            return []
+
+        # Determine where to start
+        skip_until: str | None = from_stage
+        if skip_until is None:
+            last = self._load_last_run(workflow_path)
+            if last:
+                for r in last:
+                    if not r.get("success", False):
+                        skip_until = r.get("stage_name")
+                        break
+
+        # Run stages, skipping completed ones
+        results: list[StageResult] = []
+        skipping = skip_until is not None
+        for stage_info in stages:
+            if skipping and stage_info.name != skip_until:
+                results.append(StageResult(stage_name=stage_info.name, success=True, duration_ms=0))
+                logger.info("Skipping completed stage: %s", stage_info.name)
+                continue
+            skipping = False
+
+            result = self._execute_stage(stage_info)
+            results.append(result)
+            if not result.success:
+                break
+
+        if self.ctx._variables is not None:
+            self.ctx._variables.save()
+        self._save_last_run(workflow_path, results)
 
         return results
 
@@ -76,6 +120,44 @@ class WorkflowRunner:
         """Return the names of all stages in a workflow."""
         stages = load_workflow(workflow_path)
         return [s.name for s in stages]
+
+    def _save_last_run(self, workflow_path: Path, results: list[StageResult]) -> None:
+        """Persist last run results to .restful/last_run.json."""
+        try:
+            ws_root = workflow_path.parent.parent  # notebooks/flow.py → workspace root
+            last_run_path = ws_root / LAST_RUN_FILE
+            last_run_path.parent.mkdir(parents=True, exist_ok=True)
+            data = {
+                "workflow": str(workflow_path.name),
+                "timestamp": time.time(),
+                "results": [
+                    {
+                        "stage_name": r.stage_name,
+                        "success": r.success,
+                        "error": r.error,
+                        "duration_ms": r.duration_ms,
+                        "captured_vars": r.captured_vars,
+                    }
+                    for r in results
+                ],
+            }
+            last_run_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        except Exception as e:
+            logger.debug("Could not save last_run.json: %s", e)
+
+    def _load_last_run(self, workflow_path: Path) -> list[dict] | None:
+        """Load last run results from .restful/last_run.json."""
+        try:
+            ws_root = workflow_path.parent.parent
+            last_run_path = ws_root / LAST_RUN_FILE
+            if not last_run_path.exists():
+                return None
+            data = json.loads(last_run_path.read_text(encoding="utf-8"))
+            if data.get("workflow") == workflow_path.name:
+                return data.get("results", [])
+            return None
+        except Exception:
+            return None
 
     def _execute_stage(self, stage_info: StageInfo) -> StageResult:
         """Execute a single stage function."""

@@ -287,6 +287,14 @@ def cmd_workflow_run(args: argparse.Namespace) -> None:
     if args.stage:
         result = runner.run_stage(wf_path, args.stage)
         _print_result(result)
+    elif hasattr(args, "resume") and args.resume:
+        print(f"Resuming from: {args.resume}")
+        results = runner.resume(wf_path, from_stage=args.resume)
+        for r in results:
+            _print_result(r)
+        print(f"\n{'─' * 40}")
+        passed = sum(1 for r in results if r.success)
+        print(f"Completed: {passed}/{len(results)} stages")
     else:
         results = runner.run(wf_path)
         for r in results:
@@ -421,6 +429,7 @@ def main() -> None:
     wf_run = wf_sub.add_parser("run", help="Run a notebook")
     wf_run.add_argument("workflow_name", help="Notebook file name (without .py)")
     wf_run.add_argument("--stage", help="Run a single stage by name")
+    wf_run.add_argument("--resume", help="Resume from a specific stage (skips previous)")
     wf_run.add_argument("--list", dest="list_stages", action="store_true", help="List stages")
 
     # --- legacy (backwards compatible) ---
